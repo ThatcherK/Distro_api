@@ -171,5 +171,32 @@ class Role(db.Model):
         data = {"id": self.id, "name": self.name}
         return data
 
+class InvitedUser(db.Model):
+    __tablename__ = 'invited_users'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    invite_code = db.Column(db.String(64))
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
+    def __init__(self, name, email, invite_code, role_id):
+        self.name = name
+        self.email = email
+        self.invite_code = invite_code
+        self.role_id = role_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def json(self):
+        role = Role.query.filter_by(id=self.role_id).first()
+        data = {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "invite_code": self.invite_code,
+            "role": role.role_name,
+        }
+        return data
 # class Customer(db.Model):
 #     pass
