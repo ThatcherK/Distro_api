@@ -192,7 +192,7 @@ class InvitedUser(db.Model):
             "id": self.id,
             "email": self.email,
             "invite_code": self.invite_code,
-            "role": role.role_name,
+            "role": role.name,
         }
         return data
 # class Customer(db.Model):

@@ -5,6 +5,7 @@ from flask_restx import Api, Resource
 
 from app import bcrypt, db
 from app.api.models import User, InvitedUser
+from app.api.utils import send_invite_email
 
 users_blueprint = Blueprint("users", __name__)
 api = Api(users_blueprint)
@@ -12,6 +13,7 @@ api = Api(users_blueprint)
 class InviteUser(Resource):
     def post(self):
         post_data = request.get_json()
+        print(post_data)
         email = post_data.get("email")
         role_id = post_data.get("role_id")
         if (email  and role_id) == "":
@@ -22,7 +24,7 @@ class InviteUser(Resource):
         invited_user.save()
         if current_app.config != "testing":
             send_invite_email(invite_code, invited_user.email, "http://localhost:3000/")
-        return {"invitedUser": invitedUser.json()}, 200
+        return {"invitedUser": invited_user.json()}, 200
 
     def get(self):
         invited_users = InvitedUser.query.all()
