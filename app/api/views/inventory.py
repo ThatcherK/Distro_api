@@ -27,7 +27,7 @@ class InventoryView(Resource):
     
 api.add_resource(InventoryView, "/inventory")
 
-class InventoryEditView(Resource):
+class InventoryDetailView(Resource):
     def patch(self,id):
         post_data = request.get_json()
         name = post_data.get("name")
@@ -57,4 +57,5 @@ class InventoryEditView(Resource):
                 "message": "This item does not exist"
             }
             return response_object, 404
-api.add_resource(InventoryEditView, "/inventory/<int:id>")
+
+api.add_resource(InventoryDetailView, "/inventory/<int:id>")
