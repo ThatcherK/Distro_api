@@ -24,11 +24,13 @@ def create_app(script_info=None):
     from app.api.views.business import business_blueprint
     from app.api.views.inventory import inventory_blueprint
     from app.api.views.orders import orders_blueprint
+    from app.api.views.customers import customers_blueprint
 
     app.register_blueprint(users_blueprint)
     app.register_blueprint(business_blueprint)
     app.register_blueprint(inventory_blueprint)
     app.register_blueprint(orders_blueprint)
+    app.register_blueprint(customers_blueprint)
 
     # shell context for flask cli
     @app.shell_context_processor
