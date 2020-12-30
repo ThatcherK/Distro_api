@@ -81,10 +81,12 @@ class Inventory(db.Model):
     __tablename__ = 'inventory'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
 
-    def __init__(self, name, business_id):
-        self.name= name
+    def __init__(self, name,quantity, business_id):
+        self.name = name
+        self.quantity = quantity
         self.business_id = business_id
 
     def save(self):
@@ -96,6 +98,7 @@ class Inventory(db.Model):
         data = {
             "id": self.id,
             "name": self.name,
+            "quantity": self.quantity,
             "business": business.name,
         }
         return data
