@@ -61,3 +61,35 @@ class RegisterUser(Resource):
         return {"registered_users": [user.json() for user in registered_users]}, 200   
 
 api.add_resource(RegisterUser, "/register")
+
+class Login(Resource):
+    def post(self):
+        post_data = request.get_json()
+        username = post_data.get("username")
+        password = post_data.get("password")
+        try:
+            user = User.query.filter_by(username=username).first()
+            if user and bcrypt.check_password_hash(user.password, password):
+                auth_token = user.encode_auth_token(user.id)
+                if auth_token:
+                    response_object = {
+                        "status": "Success",
+                        "token": auth_token.decode(),
+                        "user": user.json(),
+                    }
+                return response_object, 200
+            response_object = {
+                "status": "Fail",
+                "message": "Invalid username or password",
+                "token": None,
+            }
+            return response_object, 401
+        except Exception:
+            response_object = {
+                "status": "Fail",
+                "message": "Invalid credentials",
+                "token": None,
+            }
+            return response_object, 400
+
+api.add_resource(Login, "/login")
