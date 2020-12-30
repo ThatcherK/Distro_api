@@ -38,3 +38,21 @@ class RegisterUser(Resource):
         username = post_data.get("username")
         password = post_data.get("password")
         business_id = post_data.get("business_id")
+        invite_code = post_data.get("invite_code")
+        response_object = {}
+        invited_user = InvitedUser.query.filter_by(invite_code=invite_code).first()
+        if invited_user:
+            user = User(username, password, role_id, business_id)
+            user.save()
+            auth_token = user.encode_auth_token(user.id).decode()
+            response_object = {
+                "message": f"{username} was added!",
+                "token": auth_token,
+                "user": user.json()
+            }
+            return response_object,201
+        else:
+            response_object["message"] = "Not authorised"
+            return response_object, 401
+
+api.add_resource(RegisterUser, "/register")

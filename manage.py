@@ -2,7 +2,7 @@ from flask.cli import FlaskGroup
 from sqlalchemy import text
 
 from app import create_app, db
-from app.api.models import Role, Status, Business
+from app.api.models import Role, Status, User,InvitedUser
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -39,6 +39,8 @@ def recreate_db():
 def seed_db():
     create_status()
     create_roles()
+    InvitedUser(owner@distro.com, owner, 1)
     db.session.commit()
+    
 if __name__ == "__main__":
     cli()

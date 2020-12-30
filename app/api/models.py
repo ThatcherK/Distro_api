@@ -10,7 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
-    business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
+    business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=True)
 
     def __init__(self, username, password, role_id, business_id):
         self.username= username

@@ -21,7 +21,9 @@ def create_app(script_info=None):
     migrate.init_app(app, db)
 
     from app.api.views.users import users_blueprint
+    from app.api.views.business import business_blueprint
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(business_blueprint)
 
     # shell context for flask cli
     @app.shell_context_processor
