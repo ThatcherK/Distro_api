@@ -18,6 +18,7 @@ def create_roles():
     db.session.add(Role(name="driver"))
     db.session.add(Role(name="store_manager"))
     db.session.add(Role(name="customer"))
+    db.session.commit()
 
 def drop_all_tables():
     """ drops all tables and sequences from a postgres database"""
@@ -39,8 +40,8 @@ def recreate_db():
 def seed_db():
     create_status()
     create_roles()
-    InvitedUser(owner@distro.com, owner, 1)
+    db.session.add(InvitedUser('owner@distro.com', 'owner', 1))
     db.session.commit()
-    
+
 if __name__ == "__main__":
     cli()

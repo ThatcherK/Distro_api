@@ -42,9 +42,10 @@ class RegisterUser(Resource):
         response_object = {}
         invited_user = InvitedUser.query.filter_by(invite_code=invite_code).first()
         if invited_user:
+            role_id = invited_user.role_id
             user = User(username, password, role_id, business_id)
             user.save()
-            auth_token = user.encode_auth_token(user.id).decode()
+            auth_token = user.encode_auth_token(user.id)
             response_object = {
                 "message": f"{username} was added!",
                 "token": auth_token,
@@ -54,5 +55,9 @@ class RegisterUser(Resource):
         else:
             response_object["message"] = "Not authorised"
             return response_object, 401
+
+    def get(self):
+        registered_users = User.query.all()
+        return {"registered_users": [user.json() for user in registered_users]}, 200   
 
 api.add_resource(RegisterUser, "/register")

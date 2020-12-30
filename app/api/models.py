@@ -1,6 +1,7 @@
 import datetime
 import os
 import jwt
+from flask import current_app
 
 from app import bcrypt, db
 
@@ -27,13 +28,23 @@ class User(db.Model):
     def json(self):
         role = Role.query.filter_by(id=self.role_id).first()
         business = Business.query.filter_by(id=self.business_id).first()
-        data = {
-            "id": self.id,
-            "username": self.username,
-            "password": self.password,
-            "role": role.name,
-            "business": business.name,
-        }
+        data = {}
+        if business:
+            data = {
+                "id": self.id,
+                "username": self.username,
+                "password": self.password,
+                "role": role.name,
+                "business": business.name,
+            }
+        else:
+            data = {
+                "id": self.id,
+                "username": self.username,
+                "password": self.password,
+                "role": role.name,
+                "business": "",
+            }
         return data
 
     def encode_auth_token(self, user_id):
