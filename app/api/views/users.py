@@ -31,3 +31,10 @@ class InviteUser(Resource):
         return {"invited_users": [user.json() for user in invited_users]}, 200   
 
 api.add_resource(InviteUser, "/invited_users")
+
+class RegisterUser(Resource):
+    def post(self):
+        post_data = request.get_json()
+        username = post_data.get("username")
+        password = post_data.get("password")
+        business_id = post_data.get("business_id")

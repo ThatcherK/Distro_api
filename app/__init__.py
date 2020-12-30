@@ -20,7 +20,7 @@ def create_app(script_info=None):
     bcrypt.init_app(app)
     migrate.init_app(app, db)
 
-    from app.api.views import users_blueprint
+    from app.api.views.users import users_blueprint
     app.register_blueprint(users_blueprint)
 
     # shell context for flask cli

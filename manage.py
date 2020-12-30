@@ -2,7 +2,7 @@ from flask.cli import FlaskGroup
 from sqlalchemy import text
 
 from app import create_app, db
-from app.api.models import Role, Status
+from app.api.models import Role, Status, Business
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
