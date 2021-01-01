@@ -67,7 +67,7 @@ class User(db.Model):
     @staticmethod
     def decode_auth_token(auth_token):
         try:
-            payload = jwt.decode(auth_token, current_app.config.get("SECRET_KEY"))
+            payload = jwt.decode(auth_token, current_app.config.get("SECRET_KEY"),algorithms=["HS256"])
             return payload["sub"]
         except jwt.ExpiredSignatureError:
             return "Expired token. Please Log in again"
@@ -249,7 +249,7 @@ class Customer(db.Model):
     @staticmethod
     def decode_auth_token(auth_token):
         try:
-            payload = jwt.decode(auth_token, current_app.config.get("SECRET_KEY"))
+            payload = jwt.decode(auth_token, current_app.config.get("SECRET_KEY"), algorithms=["HS256"])
             return payload["sub"]
         except jwt.ExpiredSignatureError:
             return "Expired token. Please Log in again"

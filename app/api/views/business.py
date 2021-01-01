@@ -12,7 +12,9 @@ class BusinessView(Resource):
         header = request.headers.get("Authorization")
         name = post_data.get("name")
         auth_token = header.split(' ')[1]
+        print(auth_token)
         user_id = User.decode_auth_token(auth_token)
+        print(user_id)
         user = User.query.filter_by(id=user_id).first()
         response_object = {}
         if user:
