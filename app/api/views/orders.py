@@ -12,7 +12,7 @@ class OrderView(Resource):
         quantity = post_data.get("quantity")
         customer_id = post_data.get("customer_id")
         response_object = {}
-        order = Order(inventory_id=inventory_id, quantity=quantity, customer_id=customer_id, status_id=1)
+        order = Order(inventory_id, quantity, customer_id, 1)
         order.save()
         response_object = {
             "message": "success",

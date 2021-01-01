@@ -1,6 +1,7 @@
 import datetime
 import os
 import jwt
+import json
 from flask import current_app
 
 from app import bcrypt, db
@@ -113,15 +114,13 @@ class Order(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
     order_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     delivery_date = db.Column(db.DateTime, nullable=True)
-    
 
-    def __init__(self, inventory_id, quantity, transporter_id, status_id, customer_id, order_date, delivery_date):
+    def __init__(self, inventory_id, quantity, status_id, customer_id, transporter_id=None, delivery_date=None):
         self.inventory_id = inventory_id
         self.quantity= quantity
         self.transporter_id = transporter_id
         self.status_id = status_id
         self.customer_id = customer_id
-        self.order_date = order_date
         self.delivery_date = delivery_date
 
     def save(self):
@@ -130,16 +129,28 @@ class Order(db.Model):
 
     def json(self):
         item = Inventory.query.filter_by(id=self.inventory_id).first()
-        business = Business.query.filter_by(id=self.business_id).first()
         transporter = User.query.filter_by(id=self.transporter_id).first()
         customer = Customer.query.filter_by(id=self.customer_id).first()
-        data = {
-            "id": self.id,
-            "name": item.name,
-            "quantity": self.quantity,
-            "transporter": transporter.username,
-            "customer": customer.username
-        }
+        data = {}
+        if transporter:
+            data = {
+                "id": self.id,
+                "name": item.name,
+                "quantity": self.quantity,
+                "transporter": transporter.username,
+                "customer": customer.username,
+                "order_date": str(self.order_date),
+                "delivery_date": str(self.delivery_date)
+            }
+        else:
+            data = {
+                "id": self.id,
+                "name": item.name,
+                "quantity": self.quantity,
+                "customer": customer.username,
+                "order_date": str(self.order_date),
+                "delivery_date": str(self.delivery_date)
+            }
         return data
 
 class Status(db.Model):
