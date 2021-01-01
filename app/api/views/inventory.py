@@ -41,11 +41,10 @@ class InventoryDetailView(Resource):
                 "message": "success",
                 "item": item.json()
             }
-            return response_object,201
+            return response_object,200
 
     def get(self,id):
         item = Inventory.query.filter_by(id=id).first()
-        print(item)
         response_object = {}
         if item:
             response_object = {

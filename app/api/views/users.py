@@ -19,6 +19,12 @@ class InviteUser(Resource):
         if (email  and role_id) == "":
             response_object = {"message": "Invalid payload"}
             return response_object, 400
+        invite_check_user = InvitedUser.query.filter_by(email=email).first()
+        if invite_check_user:
+            response_object = {
+                "message": "This user was already invited"
+            }
+            return response_object, 400
         invite_code = str(uuid4())
         invited_user = InvitedUser(email, invite_code, role_id)
         invited_user.save()
@@ -93,3 +99,32 @@ class Login(Resource):
             return response_object, 400
 
 api.add_resource(Login, "/login")
+
+class StaffView(Resource):
+    def get(self):
+        all_staff = User.query.filter(User.role_id > 1).all()
+        return {"staff": [user.json() for user in all_staff]}, 200
+
+api.add_resource(StaffView, "/staff")
+
+class StaffDetailView(Resource):
+    def patch(self, id):
+        post_data = request.get_json()
+        username = post_data.get("username")
+        role_id = post_data.get("role_id")
+        staff = User.query.filter_by(id=id).first()
+        response_object = {}
+        if staff:
+            staff.username = username
+            staff.role_id = role_id
+            staff.save()
+            response_object = {
+                "message": "success"
+            }
+            return response_object, 200
+        response_object = {
+            "message": "User does not exist"
+        }
+        return response_object, 404
+
+api.add_resource(StaffDetailView, "/staff/<int:id>")
