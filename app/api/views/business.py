@@ -11,23 +11,23 @@ class BusinessView(Resource):
         post_data = request.get_json()
         header = request.headers.get("Authorization")
         name = post_data.get("name")
-        # auth_token = header.split(' ')[1]
-        # user_id = User.decode_auth_token(auth_token)
-        # user = User.query.filter_by(id=user_id).first()
+        auth_token = header.split(' ')[1]
+        user_id = User.decode_auth_token(auth_token)
+        user = User.query.filter_by(id=user_id).first()
         response_object = {}
-        # if user.role_id == 1:
-        business = Business(name)
-        business.save()
+        if user:
+            if user.role_id == 1:
+                business = Business(name)
+                business.save()
+                response_object = {
+                    "message": "success",
+                    "business": business.json()
+                }
+                return response_object, 201
         response_object = {
-            "message": "success",
-            "business": business.json()
+            "message": "Unauthorized"
         }
-        return response_object, 201
-        # else:
-        #     response_object = {
-        #         "message": "Unauthorized"
-        #     }
-        #     return response_object, 404
+        return response_object, 404
 
 
     def get(self):

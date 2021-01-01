@@ -74,7 +74,7 @@ class Login(Resource):
                 if auth_token:
                     response_object = {
                         "status": "Success",
-                        "token": auth_token.decode(),
+                        "token": auth_token,
                         "user": user.json(),
                     }
                 return response_object, 200
