@@ -1,12 +1,12 @@
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 
 class BaseConfig:
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get("SECRET_KEY")
+    SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY") 
+    SENDGRID_SENDER_MAIL = os.environ.get("SENDGRID_SENDER_MAIL")
     BCRYPT_LOG_ROUNDS = 12
     TOKEN_EXPIRATION_DAYS = 5
     TOKEN_EXPIRATION_SECONDS = 0
