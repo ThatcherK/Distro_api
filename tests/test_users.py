@@ -166,3 +166,65 @@ def test_login(test_app, test_database):
     data2 = json.loads(resp2.data.decode())
     assert resp2.status_code == 200
     assert "Success" in data2.get("status")
+
+def test_login_invalid_password_or_username(test_app, test_database):
+    test_token = test_database[1]
+    client = test_app.test_client()
+    resp1 = client.post(
+        "/invited_users",
+        data=json.dumps({"email": "moself@mail.io", "role_id": 3}),
+        content_type="application/json",
+        headers={"Authorization": f"Bearer {test_token}"},
+    )
+    data1 = json.loads(resp1.data.decode())
+    invite_code = data1["invitedUser"].get("invite_code")
+    client.post(
+        "/register",
+        data=json.dumps(
+            {
+                "username": "moself",
+                "password": "password900",
+                "invite_code": invite_code,
+            }
+        ),
+        content_type="application/json",
+    )
+    resp2 = client.post(
+        "/login",
+        data=json.dumps({"username": "moself", "password": "password00"}),
+        content_type="application/json",
+    )
+    data2 = json.loads(resp2.data.decode())
+    assert resp2.status_code == 401
+    assert "Invalid username or password" in data2.get("message")
+
+def test_login_invalid_json(test_app, test_database):
+    test_token = test_database[1]
+    client = test_app.test_client()
+    resp1 = client.post(
+        "/invited_users",
+        data=json.dumps({"email": "muself@mail.io", "role_id": 3}),
+        content_type="application/json",
+        headers={"Authorization": f"Bearer {test_token}"},
+    )
+    data1 = json.loads(resp1.data.decode())
+    invite_code = data1["invitedUser"].get("invite_code")
+    client.post(
+        "/register",
+        data=json.dumps(
+            {
+                "username": "muself",
+                "password": "password900",
+                "invite_code": invite_code,
+            }
+        ),
+        content_type="application/json",
+    )
+    resp2 = client.post(
+        "/login",
+        data=json.dumps({}),
+        content_type="application/json",
+    )
+    data2 = json.loads(resp2.data.decode())
+    assert resp2.status_code == 400
+    assert "Invalid payload" in data2.get("message")
