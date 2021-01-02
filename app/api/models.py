@@ -35,7 +35,7 @@ class User(db.Model):
                 "id": self.id,
                 "username": self.username,
                 "password": self.password,
-                "role": role.name,
+                "role": role.json(),
                 "business": business.name,
             }
         else:
@@ -43,7 +43,7 @@ class User(db.Model):
                 "id": self.id,
                 "username": self.username,
                 "password": self.password,
-                "role": role.name,
+                "role": role.json(),
                 "business": "",
             }
         return data
