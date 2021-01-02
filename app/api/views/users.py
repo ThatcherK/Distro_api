@@ -5,25 +5,27 @@ from flask_restx import Api, Resource
 
 from app import bcrypt, db
 from app.api.models import User, InvitedUser
-from app.api.utils import send_invite_email
+from app.api.utils import send_invite_email, requires_admin_access, validate_invite_user
 
 users_blueprint = Blueprint("users", __name__)
 api = Api(users_blueprint)
 
 class InviteUser(Resource):
+    @validate_invite_user
+    @requires_admin_access
+   
     def post(self):
         post_data = request.get_json()
         print(post_data)
         email = post_data.get("email")
         role_id = post_data.get("role_id")
-        if (email  and role_id) == "":
-            response_object = {"message": "Invalid payload"}
-            return response_object, 400
+      
         invite_check_user = InvitedUser.query.filter_by(email=email).first()
         if invite_check_user:
             response_object = {
                 "message": "This user was already invited"
             }
+            print(response_object)
             return response_object, 400
         invite_code = str(uuid4())
         invited_user = InvitedUser(email, invite_code, role_id)
@@ -49,6 +51,9 @@ class RegisterUser(Resource):
         invited_user = InvitedUser.query.filter_by(invite_code=invite_code).first()
         if invited_user:
             role_id = invited_user.role_id
+            user_check = User.query.filter_by(username=username).first()
+            if user_check:
+                return {"message": "This user already exists"},400
             user = User(username, password, role_id, business_id)
             user.save()
             auth_token = user.encode_auth_token(user.id)
@@ -73,30 +78,31 @@ class Login(Resource):
         post_data = request.get_json()
         username = post_data.get("username")
         password = post_data.get("password")
-        try:
-            user = User.query.filter_by(username=username).first()
-            if user and bcrypt.check_password_hash(user.password, password):
-                auth_token = user.encode_auth_token(user.id)
-                if auth_token:
-                    response_object = {
-                        "status": "Success",
-                        "token": auth_token,
-                        "user": user.json(),
-                    }
-                return response_object, 200
-            response_object = {
-                "status": "Fail",
-                "message": "Invalid username or password",
-                "token": None,
-            }
-            return response_object, 401
-        except Exception:
-            response_object = {
-                "status": "Fail",
-                "message": "Invalid credentials",
-                "token": None,
-            }
-            return response_object, 400
+        if username == None or password == None:
+            return {"message": "Invalid payload"}, 400
+        user = User.query.filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            auth_token = user.encode_auth_token(user.id)
+            if auth_token:
+                response_object = {
+                    "status": "Success",
+                    "token": auth_token,
+                    "user": user.json(),
+                }
+            return response_object, 200
+        response_object = {
+            "status": "Fail",
+            "message": "Invalid username or password",
+            "token": None,
+        }
+        return response_object, 401
+        # except Exception:
+        #     response_object = {
+        #         "status": "Fail",
+        #         "message": "Invalid credentials",
+        #         "token": None,
+        #     }
+        #     return response_object, 400
 
 api.add_resource(Login, "/login")
 
