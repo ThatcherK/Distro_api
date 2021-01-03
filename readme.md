@@ -1,6 +1,6 @@
 ![distro_api Actions status](https://github.com/ThatcherK/Distro_api/workflows/distro_api/badge.svg)
 
-An API for the proxpert legal web app
+An API for the distroIQ  web app
 
 
 ## Technologies
