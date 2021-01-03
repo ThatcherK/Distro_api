@@ -11,14 +11,24 @@ class InventoryView(Resource):
         post_data = request.get_json()
         name = post_data.get("name")
         quantity = post_data.get("quantity")
-        business_id = 1
-        new_item = Inventory(name, quantity, business_id)
-        new_item.save()
+        business_id = post_data.get("business_id")
+        if post_data:
+            if name == None or quantity == None or business_id == None:
+                response_object = {
+                    "message": "Invalid payload"
+                }
+                return response_object, 400
+            new_item = Inventory(name, quantity, business_id)
+            new_item.save()
+            response_object = {
+                "message": "success",
+                "item": new_item.json()
+            }
+            return response_object,201
         response_object = {
-            "message": "success",
-            "item": new_item.json()
+            "message": "Invalid payload"
         }
-        return response_object,201
+        return response_object, 400
 
     def get(self):
         inventory = Inventory.query.all()
@@ -42,6 +52,10 @@ class InventoryDetailView(Resource):
                 "item": item.json()
             }
             return response_object,200
+        response_object = {
+            "message": "This item does not exist"
+        }
+        return response_object, 404
 
     def get(self,id):
         item = Inventory.query.filter_by(id=id).first()
