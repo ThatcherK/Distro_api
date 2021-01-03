@@ -25,7 +25,7 @@ def test_add_business_no_authtoken(test_app):
 
     assert resp.status_code == 401
 
-def test_get_business(test_app):
+# def test_get_business(test_app):
     # client = test_app.test_client()
     # resp = client.get("/business")
     # data = json.loads(resp.data.decode())
