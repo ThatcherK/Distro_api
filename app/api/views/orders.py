@@ -7,6 +7,7 @@ api = Api(orders_blueprint)
 
 class OrderView(Resource):
     def post(self):
+        print("Orders api")
         post_data = request.get_json()
         inventory_id = post_data.get("inventory_id")
         quantity = post_data.get("quantity")
@@ -32,6 +33,7 @@ class OrderView(Resource):
             "message": "Not found"
         }
         response_object, 404
+
     def get(self):
         orders = Order.query.all()
         return {"orders": [order.json() for order in orders]}, 200
