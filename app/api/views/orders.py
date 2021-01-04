@@ -11,7 +11,7 @@ class OrderView(Resource):
         inventory_id = post_data.get("inventory_id")
         quantity = post_data.get("quantity")
         customer_id = post_data.get("customer_id")
-        inventory_item = Inventory.query.filter_by(id=inventory_id)
+        inventory_item = Inventory.query.filter_by(id=inventory_id).first()
         if inventory_item:
             if inventory_item.quantity > quantity:
                 order = Order(inventory_id, quantity, customer_id, 1)
