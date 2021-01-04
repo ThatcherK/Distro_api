@@ -28,11 +28,11 @@ class OrderView(Resource):
                 response_object = {
                     "message": "Required quantity exceeds the stock"
                 }
-                response_object, 400
+                return response_object, 400
         response_object = {
             "message": "Not found"
         }
-        response_object, 404
+        return response_object, 404
 
     def get(self):
         orders = Order.query.all()
