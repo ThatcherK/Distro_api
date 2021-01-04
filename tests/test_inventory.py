@@ -17,6 +17,7 @@ def test_add_inventory(test_app, test_database):
             }
         ),
         content_type="application/json",
+        headers={"Authorization": f"Bearer {test_token}"},
     )
     data = json.loads(resp.data.decode())
     assert resp.status_code == 201
@@ -35,6 +36,7 @@ def test_add_inventory_invalid_json(test_app, test_database):
             }
         ),
         content_type="application/json",
+        headers={"Authorization": f"Bearer {test_token}"},
     )
     data = json.loads(resp.data.decode())
     assert resp.status_code == 400
@@ -54,6 +56,7 @@ def test_add_inventory_missing_fields(test_app, test_database):
             }
         ),
         content_type="application/json",
+        headers={"Authorization": f"Bearer {test_token}"},
     )
     data = json.loads(resp.data.decode())
     assert resp.status_code == 400
