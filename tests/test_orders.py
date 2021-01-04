@@ -23,7 +23,7 @@ def test_add_order(test_app, test_database):
         )
     data = json.loads(resp.data.decode())
     assert resp.status_code == 201
-    assert "success" in data.get("status")
+    assert "success" in data.get("message")
 
 def test_add_order_higher_quantity_than_stock(test_app, test_database):
     client = test_app.test_client()

@@ -2,7 +2,7 @@ from flask.cli import FlaskGroup
 from sqlalchemy import text
 
 from app import create_app, db
-from app.api.models import Role, Status, User,InvitedUser
+from app.api.models import Role, Status, User,InvitedUser, Customer
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -30,6 +30,7 @@ def recreate_db():
 def seed_db():
     create_status()
     create_roles()
+    db.session.add(Customer("Jane Doe", "password123", "0706536827", 5))
     db.session.add(InvitedUser('owner@distro.com', 'owner', 1))
     db.session.commit()
 

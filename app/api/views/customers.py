@@ -11,10 +11,11 @@ class RegisterCustomer(Resource):
         post_data = request.get_json()
         username = post_data.get("username")
         password = post_data.get("password")
+        phone_number = post_data.get("phone_number")
         response_object = {}
         new_customer = Customer.query.filter_by(username=username).first()
         if not new_customer:
-            customer = Customer(username, password, 5)
+            customer = Customer(username, password, phone_number, 5)
             customer.save()
             auth_token = customer.encode_auth_token(customer.id)
             response_object = {
