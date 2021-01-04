@@ -143,8 +143,8 @@ class Order(db.Model):
                 "quantity": self.quantity,
                 "transporter": transporter.username,
                 "customer": customer.username,
-                "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date),
+                "order_date": self.order_date.strftime("%d %b %Y "),
+                "delivery_date": self.delivery_date.strftime("%d %b %Y ") if self.delivery_date else None,
                 "status": status.name
             }
         else:
@@ -153,8 +153,8 @@ class Order(db.Model):
                 "name": item.name,
                 "quantity": self.quantity,
                 "customer": customer.username,
-                "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date),
+                "order_date": self.order_date.strftime("%d %b %Y "),
+                "delivery_date": self.delivery_date.strftime("%d %b %Y") if self.delivery_date else None,
                 "status": status.name
             }
         return data

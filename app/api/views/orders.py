@@ -7,7 +7,6 @@ api = Api(orders_blueprint)
 
 class OrderView(Resource):
     def post(self):
-        print("Orders api")
         post_data = request.get_json()
         inventory_id = post_data.get("inventory_id")
         quantity = post_data.get("quantity")
@@ -39,3 +38,23 @@ class OrderView(Resource):
         return {"orders": [order.json() for order in orders]}, 200
         
 api.add_resource(OrderView, "/orders")
+
+class OrderDetailView(Resource):
+    def patch(self, id):
+        post_data = request.get_json()
+        transporter_id = post_data.get("transporter_id")
+        ordered_item = Order.query.filter_by(id=id).first()
+        if ordered_item:
+            ordered_item.transporter_id = transporter_id
+            ordered_item.status_id = 2
+            ordered_item.save()
+            response_object = {
+                "message": "success",
+                "order": ordered_item.json()
+            }
+            return response_object, 200
+        response_object = {
+            "message": "Not found"
+        }
+        return response_object, 404
+api.add_resource(OrderDetailView, "/orders/<int:id>")

@@ -8,7 +8,7 @@ def test_add_order(test_app, test_database):
     db.session.add(Business("distro",1))
     db.session.commit()
     db.session.add(Inventory("paper", 100, 100, 1))
-    db.session.add(Customer("Mary", "password", 5))
+    db.session.add(Customer("Mary", "password","0707625384" 5))
     db.session.commit()
     resp = client.post(
         "/orders",
@@ -30,7 +30,7 @@ def test_add_order_higher_quantity_than_stock(test_app, test_database):
     db.session.add(Business("distro",1))
     db.session.commit()
     db.session.add(Inventory("paper", 100, 100, 1))
-    db.session.add(Customer("Mary", "password", 5))
+    db.session.add(Customer("Mary", "password","0759738261", 5))
     db.session.commit()
     resp = client.post(
         "/orders",
