@@ -19,8 +19,7 @@ class BusinessView(Resource):
         user = User.query.filter_by(id=user_id).first()
         response_object = {}
         if user:
-            # if user.role_id == 1:
-            business = Business(name)
+            business = Business(name, user.id)
             business.save()
             response_object = {
                 "message": "success",

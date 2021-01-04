@@ -11,14 +11,15 @@ class InventoryView(Resource):
         post_data = request.get_json()
         name = post_data.get("name")
         quantity = post_data.get("quantity")
+        price = post_data.get("price")
         business_id = post_data.get("business_id")
         if post_data:
-            if name == None or quantity == None or business_id == None:
+            if name == None or quantity == None or business_id == None or price == None:
                 response_object = {
                     "message": "Invalid payload"
                 }
                 return response_object, 400
-            new_item = Inventory(name, quantity, business_id)
+            new_item = Inventory(name, quantity, price, business_id)
             new_item.save()
             response_object = {
                 "message": "success",

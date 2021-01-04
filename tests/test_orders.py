@@ -3,9 +3,9 @@ import json
 from app import db
 from app.api.models import Business, Inventory, Customer
 
-def test_add_order(test_app):
+def test_add_order(test_app, test_database):
     client = test_app.test_client()
-    db.session.add(Business("distro"))
+    db.session.add(Business("distro",1))
     db.session.commit()
     db.session.add(Inventory("paper", 100, 1))
     db.session.add(Customer("Mary", "password", 5))

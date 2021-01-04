@@ -12,6 +12,7 @@ def test_add_inventory(test_app, test_database):
             {
                 "name": "boats",
                 "quantity": 10,
+                "price": 1000000,
                 "business_id": 1,
             }
         ),
@@ -75,7 +76,7 @@ def test_update_inventory_detail(test_app, test_database):
     client = test_app.test_client()
     db.session.add(Business("distro"))
     db.session.commit()
-    db.session.add(Inventory("paper", 1000, 1))
+    db.session.add(Inventory("paper", 1000,1000, 1))
     db.session.commit()
     resp = client.patch(
         "/inventory/1",
@@ -83,6 +84,7 @@ def test_update_inventory_detail(test_app, test_database):
             {
               "name": "paper",
               "quantity": 900,
+              "price": 500,
               "business_id": 1
             }
         ),
