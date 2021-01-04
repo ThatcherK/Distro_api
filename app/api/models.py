@@ -14,7 +14,7 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=True)
 
-    def __init__(self, username, password, role_id, business_id):
+    def __init__(self, username, password, role_id, business_id=None):
         self.username= username
         self.password = bcrypt.generate_password_hash(
             password, current_app.config.get("BCRYPT_LOG_ROUNDS")
@@ -83,11 +83,13 @@ class Inventory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
 
-    def __init__(self, name,quantity, business_id):
+    def __init__(self, name, quantity, price, business_id):
         self.name = name
         self.quantity = quantity
+        self.price = price
         self.business_id = business_id
 
     def save(self):
@@ -100,6 +102,7 @@ class Inventory(db.Model):
             "id": self.id,
             "name": self.name,
             "quantity": self.quantity,
+            "price": self.price,
             "business": business.name,
         }
         return data
@@ -131,6 +134,7 @@ class Order(db.Model):
         item = Inventory.query.filter_by(id=self.inventory_id).first()
         transporter = User.query.filter_by(id=self.transporter_id).first()
         customer = Customer.query.filter_by(id=self.customer_id).first()
+        status = Status.query.filter_by(id = self.status_id).first()
         data = {}
         if transporter:
             data = {
@@ -140,7 +144,8 @@ class Order(db.Model):
                 "transporter": transporter.username,
                 "customer": customer.username,
                 "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date)
+                "delivery_date": str(self.delivery_date),
+                "status": status.name
             }
         else:
             data = {
@@ -149,7 +154,8 @@ class Order(db.Model):
                 "quantity": self.quantity,
                 "customer": customer.username,
                 "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date)
+                "delivery_date": str(self.delivery_date),
+                "status": status.name
             }
         return data
 
@@ -173,16 +179,23 @@ class Business(db.Model):
     __tablename__ = 'businesses'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    business_owner_id = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, business_owner_id):
         self.name = name
+        self.business_owner_id = business_owner_id
 
     def save(self):
         db.session.add(self)
         db.session.commit()
 
     def json(self):
-        data = {"id": self.id, "name": self.name}
+        business_owner = User.query.filter_by(id=self.business_owner_id).first()
+        data = {
+            "id": self.id, 
+            "name": self.name,
+            "business_owner": business_owner.json()
+            }
         return data
 
 class Role(db.Model):

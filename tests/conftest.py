@@ -17,15 +17,14 @@ def create_roles():
     db.session.commit()
 
 def create_business():
-    db.session.add(Business("distro"))
-    db.session.commit()
+    db.session.add(Business("distro",1))
+    # db.session.commit()
 
 def seed_test_db():
-    create_roles()
-    create_business()
-    owner = User('Owner', 'owner', 1, 1)
-    db.session.add(owner)
     create_status()
+    owner = User('Owner','owner', 1)
+    db.session.add(owner)
+    create_business()
     db.session.commit()
     token = owner.encode_auth_token(owner.id)
     return token
@@ -40,6 +39,7 @@ def test_app():
 @pytest.fixture(scope="function")
 def test_database():
     db.create_all()
+    create_roles()
     test_auth_token = seed_test_db()
     yield db, test_auth_token
     db.session.remove()

@@ -33,7 +33,7 @@ def test_get_invited_users(test_app, test_database):
     assert "moma@mail.com" in data.get("invited_users")[0].get("email")
     assert len(data.get("invited_users")) == 1
 
-def test_invite_user_no_authToken(test_app, test_database):
+def test_invite_user_no_authToken(test_app):
     client = test_app.test_client()
     resp = client.post(
         "/invited_users",

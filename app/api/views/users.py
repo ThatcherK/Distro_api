@@ -19,7 +19,6 @@ class InviteUser(Resource):
         print(post_data)
         email = post_data.get("email")
         role_id = post_data.get("role_id")
-      
         invite_check_user = InvitedUser.query.filter_by(email=email).first()
         if invite_check_user:
             response_object = {
