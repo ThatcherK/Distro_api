@@ -8,7 +8,7 @@ def test_add_order(test_app, test_database):
     db.session.add(Business("distro",1))
     db.session.commit()
     db.session.add(Inventory("paper", 100, 100, 1))
-    db.session.add(Customer("Mary", "password","0707625384" 5))
+    db.session.add(Customer("Mary", "password", "0707625384", 5))
     db.session.commit()
     resp = client.post(
         "/orders",
