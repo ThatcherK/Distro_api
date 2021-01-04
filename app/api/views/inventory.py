@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, request
 from flask_restx import Api, Resource
 
-from app.api.models import Inventory
+from app.api.models import Inventory, User, Business
 
 inventory_blueprint = Blueprint("inventory", __name__)
 api = Api(inventory_blueprint)
@@ -12,7 +12,13 @@ class InventoryView(Resource):
         name = post_data.get("name")
         quantity = post_data.get("quantity")
         price = post_data.get("price")
-        business_id = post_data.get("business_id")
+        auth_header = request.headers.get("Authorization")
+        if not auth_header:
+            return response_object, 401
+        auth_token = auth_header.split(" ")[1]
+        user_id = User.decode_auth_token(auth_token)
+        business = Business.query.filter_by(business_owner_id=user_id).first()
+        business_id = business.id
         if post_data:
             if name == None or quantity == None or business_id == None or price == None:
                 response_object = {
