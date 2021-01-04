@@ -27,10 +27,22 @@ For windows
 
 ### Install dependencies
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
+### Get environment variables
+You will need to set the following environment variables inorder to run the application
+```
+SECRET_KEY
+DATABASE_URL
+TEST_DATABASE_URL
+SENDGRID_API_KEY
+SENDGRID_SENDER_MAIL
+```
 
 ### Run the app 
 
-`python manage.py run`
+`python3 manage.py run`
 
+### Run the tests
+
+`pytest`
