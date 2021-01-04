@@ -5,7 +5,7 @@ An API for the distroIQ  web app
 
 ## Technologies
 
-1. Python 3.7
+1. Python 3.8
 2. Postgresql
 3. Flask 1.1.2
 
@@ -38,6 +38,9 @@ TEST_DATABASE_URL
 SENDGRID_API_KEY
 SENDGRID_SENDER_MAIL
 ```
+### Seed the database
+
+`python3 manage.py seed_db`
 
 ### Run the app 
 

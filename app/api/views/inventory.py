@@ -52,10 +52,12 @@ class InventoryDetailView(Resource):
         post_data = request.get_json()
         name = post_data.get("name")
         quantity = post_data.get("quantity")
+        price = post_data.get("price")
         item = Inventory.query.filter_by(id=id).first()
         if item:
             item.name = name
             item.quantity = quantity
+            item.price = price
             item.save()
             response_object = {
                 "message": "success",

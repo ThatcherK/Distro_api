@@ -143,8 +143,8 @@ class Order(db.Model):
                 "quantity": self.quantity,
                 "transporter": transporter.username,
                 "customer": customer.username,
-                "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date),
+                "order_date": self.order_date.strftime("%d %b %Y "),
+                "delivery_date": self.delivery_date.strftime("%d %b %Y ") if self.delivery_date else None,
                 "status": status.name
             }
         else:
@@ -153,8 +153,8 @@ class Order(db.Model):
                 "name": item.name,
                 "quantity": self.quantity,
                 "customer": customer.username,
-                "order_date": str(self.order_date),
-                "delivery_date": str(self.delivery_date),
+                "order_date": self.order_date.strftime("%d %b %Y "),
+                "delivery_date": self.delivery_date.strftime("%d %b %Y") if self.delivery_date else None,
                 "status": status.name
             }
         return data
@@ -243,14 +243,16 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
+    phone_number = db.Column(db.String(128), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
     orders = db.relationship("Order", backref='customer', lazy=True)
 
-    def __init__(self, username, password, role_id):
+    def __init__(self, username, password, phone_number, role_id):
         self.username = username
         self.password = bcrypt.generate_password_hash(
             password, current_app.config.get("BCRYPT_LOG_ROUNDS")
         ).decode()
+        self.phone_number = phone_number
         self.role_id = role_id
 
     def encode_auth_token(self, user_id):
@@ -290,6 +292,7 @@ class Customer(db.Model):
             "id": self.id,
             "username": self.username,
             "password": self.password,
+            "phone_number": self.phone_number,
             "role": role.name,
         }
         return data
