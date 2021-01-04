@@ -14,6 +14,9 @@ class InventoryView(Resource):
         price = post_data.get("price")
         auth_header = request.headers.get("Authorization")
         if not auth_header:
+            response_object = {
+                "message": "Unauthorized"
+            }
             return response_object, 401
         auth_token = auth_header.split(" ")[1]
         user_id = User.decode_auth_token(auth_token)

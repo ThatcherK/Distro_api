@@ -16,8 +16,7 @@ def test_add_order(test_app, test_database):
             {
                 "inventory_id": 1,
                 "quantity": 2,
-                "customer_id": 1,
-              
+                "customer_id": 1,   
             }
         ),
         content_type="application/json",
