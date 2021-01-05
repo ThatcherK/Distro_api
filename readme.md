@@ -38,8 +38,9 @@ TEST_DATABASE_URL
 SENDGRID_API_KEY
 SENDGRID_SENDER_MAIL
 ```
-### Seed the database
-
+### Create and seed the database
+These should be run the first time the application is run
+`python3 manage.py recreate_db`
 `python3 manage.py seed_db`
 
 ### Run the app 
